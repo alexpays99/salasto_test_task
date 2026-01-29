@@ -3,16 +3,16 @@ abstract final class AppStrings {
   static const appTitle = 'Shubek Lubek';
 
   // Story Detail
-  static const storyTitle = 'The Island of Whispers';
+  static const storyTitle = 'The Island of\nWhispers';
   static const storyDescription =
-      'Join Sindbad on a thrilling voyage to a mysterious island where '
-      'ancient secrets are guarded by mythical creatures. Discover the power '
-      'of wisdom and courage as our hero faces challenges that test his very soul.';
+      'Sindbad and Rawi reach a mysterious island '
+      'where voices whisper in the wind. When they '
+      'find a trapped bird, Sindbad must...';
 
   // Tags
   static const tagWisdom = 'Wisdom';
   static const tagCourage = 'Courage';
-  static const tagPirate = 'Pirate';
+  static const duration = '12 mins';
 
   // Actions
   static const addToQuest = 'Add to Quest';
@@ -22,5 +22,5 @@ abstract final class AppStrings {
   // Lessons
   static const lessonsLearnt = 'Lessons Learnt';
   static const lessonsLockedDescription =
-      'Complete the story to unlock lessons';
+      'Finish the adventure first to\nsee the lessons learnt';
 }

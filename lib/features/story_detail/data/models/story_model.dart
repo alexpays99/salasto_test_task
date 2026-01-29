@@ -7,7 +7,8 @@ abstract final class StoryModel {
         id: '1',
         title: AppStrings.storyTitle,
         description: AppStrings.storyDescription,
-        illustrationPath: AppAssets.storyIllustration,
-        tags: [StoryTag.wisdom, StoryTag.courage, StoryTag.pirate],
+        illustrationPath: AppAssets.storyImage,
+        tags: [StoryTag.wisdom, StoryTag.courage],
+        duration: AppStrings.duration,
       );
 }

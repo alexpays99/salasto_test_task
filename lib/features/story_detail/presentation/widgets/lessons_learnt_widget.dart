@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../bloc/story_detail_bloc.dart';
 import '../bloc/story_detail_state.dart';
 
+/// "Lessons Learnt" card with locked state.
 class LessonsLearntWidget extends StatelessWidget {
   const LessonsLearntWidget({super.key});
 
@@ -17,14 +19,21 @@ class LessonsLearntWidget extends StatelessWidget {
       selector: (state) => state.isLessonsUnlocked,
       builder: (context, isUnlocked) => Container(
         width: double.infinity,
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: AppColors.surfaceCard,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
-            color: AppColors.divider,
+            color: AppColors.borderGradientStart,
             width: 1,
           ),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.shadowDark,
+              blurRadius: 15,
+              offset: Offset(0, 5),
+            ),
+          ],
         ),
         child: isUnlocked
             ? const _UnlockedContent()
@@ -41,31 +50,47 @@ class _LockedContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 56.w,
-          height: 56.h,
-          decoration: BoxDecoration(
-            color: AppColors.locked.withValues(alpha: 0.3),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            Icons.lock_outline,
-            color: AppColors.locked,
-            size: 28.sp,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            AppStrings.lessonsLearnt,
+            style: AppTextStyles.heading2,
           ),
         ),
-        SizedBox(height: 12.h),
-        Text(
-          AppStrings.lessonsLearnt,
-          style: AppTextStyles.heading2,
-        ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 16.h),
+        const _HumanAvatar(),
+        SizedBox(height: 16.h),
         Text(
           AppStrings.lessonsLockedDescription,
-          style: AppTextStyles.bodySmall,
+          style: AppTextStyles.lessonsBody,
           textAlign: TextAlign.center,
         ),
       ],
+    );
+  }
+}
+
+class _HumanAvatar extends StatelessWidget {
+  const _HumanAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 60.w,
+      height: 60.h,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.exodusFruit,
+          width: 1.25,
+        ),
+      ),
+      child: ClipOval(
+        child: Image.asset(
+          AppAssets.humanImage,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }
@@ -85,7 +110,7 @@ class _UnlockedContent extends StatelessWidget {
         SizedBox(height: 12.h),
         Text(
           AppStrings.lessonsLockedDescription,
-          style: AppTextStyles.bodyMedium,
+          style: AppTextStyles.lessonsBody,
         ),
       ],
     );

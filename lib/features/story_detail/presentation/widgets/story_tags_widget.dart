@@ -14,45 +14,73 @@ class StoryTagsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<StoryDetailBloc, StoryDetailState, List<StoryTag>>(
-      selector: (state) => state.story?.tags ?? [],
-      builder: (context, tags) {
-        if (tags.isEmpty) return const SizedBox.shrink();
+    return BlocBuilder<StoryDetailBloc, StoryDetailState>(
+      builder: (context, state) {
+        final story = state.story;
+        if (story == null) return const SizedBox.shrink();
 
-        return Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: tags.map((tag) => _StoryTagChip(tag: tag)).toList(),
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ...story.tags.map(
+              (tag) => Padding(
+                padding: EdgeInsets.only(right: 10.w),
+                child: _TagChip(
+                  label: switch (tag) {
+                    StoryTag.wisdom => AppStrings.tagWisdom,
+                    StoryTag.courage => AppStrings.tagCourage,
+                  },
+                ),
+              ),
+            ),
+            _DurationChip(duration: story.duration),
+          ],
         );
       },
     );
   }
 }
 
-class _StoryTagChip extends StatelessWidget {
-  final StoryTag tag;
+class _TagChip extends StatelessWidget {
+  final String label;
 
-  const _StoryTagChip({required this.tag});
+  const _TagChip({required this.label});
 
   @override
   Widget build(BuildContext context) {
-    final (label, color) = switch (tag) {
-      StoryTag.wisdom => (AppStrings.tagWisdom, AppColors.tagWisdom),
-      StoryTag.courage => (AppStrings.tagCourage, AppColors.tagCourage),
-      StoryTag.pirate => (AppStrings.tagPirate, AppColors.tagPirate),
-    };
-
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.3),
+        color: AppColors.tagBackground,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: color.withValues(alpha: 0.5),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.tagBorder, width: 1),
       ),
       child: Text(label, style: AppTextStyles.tag),
+    );
+  }
+}
+
+class _DurationChip extends StatelessWidget {
+  final String duration;
+
+  const _DurationChip({required this.duration});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.access_time_filled,
+          size: 15.sp,
+          color: AppColors.exodusFruit,
+        ),
+        SizedBox(width: 5.w),
+        Text(
+          duration,
+          style: AppTextStyles.tag.copyWith(color: AppColors.textSecondary),
+        ),
+      ],
     );
   }
 }

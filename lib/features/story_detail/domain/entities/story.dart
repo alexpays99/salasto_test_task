@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum StoryTag { wisdom, courage, pirate }
+enum StoryTag { wisdom, courage }
 
 enum ActionType { listen, read }
 
@@ -10,6 +10,7 @@ final class Story extends Equatable {
   final String description;
   final String illustrationPath;
   final List<StoryTag> tags;
+  final String duration;
   final bool isBookmarked;
   final bool isInQuest;
   final bool isLessonsUnlocked;
@@ -20,6 +21,7 @@ final class Story extends Equatable {
     required this.description,
     required this.illustrationPath,
     required this.tags,
+    required this.duration,
     this.isBookmarked = false,
     this.isInQuest = false,
     this.isLessonsUnlocked = false,
@@ -36,6 +38,7 @@ final class Story extends Equatable {
         description: description,
         illustrationPath: illustrationPath,
         tags: tags,
+        duration: duration,
         isBookmarked: isBookmarked ?? this.isBookmarked,
         isInQuest: isInQuest ?? this.isInQuest,
         isLessonsUnlocked: isLessonsUnlocked ?? this.isLessonsUnlocked,
@@ -48,6 +51,7 @@ final class Story extends Equatable {
         description,
         illustrationPath,
         tags,
+        duration,
         isBookmarked,
         isInQuest,
         isLessonsUnlocked,
