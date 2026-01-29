@@ -1,0 +1,13 @@
+import '../../domain/entities/story.dart';
+import '../../../../core/constants/app_assets.dart';
+import '../../../../core/localization/app_strings.dart';
+
+abstract final class StoryModel {
+  static Story get mockStory => const Story(
+        id: '1',
+        title: AppStrings.storyTitle,
+        description: AppStrings.storyDescription,
+        illustrationPath: AppAssets.storyIllustration,
+        tags: [StoryTag.wisdom, StoryTag.courage, StoryTag.pirate],
+      );
+}
