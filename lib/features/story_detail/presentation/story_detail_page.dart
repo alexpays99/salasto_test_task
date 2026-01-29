@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/strings/app_strings.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../domain/entities/story.dart';
 import 'bloc/story_detail_bloc.dart';
@@ -38,7 +39,10 @@ class _StoryDetailView extends StatelessWidget {
             child: CircularProgressIndicator(),
           ),
           StoryDetailStatus.error => Center(
-            child: Text('Something went wrong', style: AppTextStyles.bodyLarge),
+            child: Text(
+              AppStrings.errorMessage,
+              style: AppTextStyles.bodyLarge,
+            ),
           ),
           StoryDetailStatus.loaded => _StoryDetailContent(
             onShare: () => context.read<StoryDetailBloc>().add(

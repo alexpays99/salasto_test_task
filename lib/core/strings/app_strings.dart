@@ -19,6 +19,9 @@ abstract final class AppStrings {
   static const listen = 'Listen';
   static const read = 'Read';
 
+  // Errors
+  static const errorMessage = 'Something went wrong';
+
   // Lessons
   static const lessonsLearnt = 'Lessons Learnt';
   static const lessonsLockedDescription =

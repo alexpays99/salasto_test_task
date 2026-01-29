@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../../core/localization/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 import '../../data/models/story_model.dart';
 import '../../domain/entities/story.dart';
 import 'story_detail_event.dart';

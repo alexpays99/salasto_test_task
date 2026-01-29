@@ -1,6 +1,6 @@
 import '../../domain/entities/story.dart';
 import '../../../../core/constants/app_assets.dart';
-import '../../../../core/localization/app_strings.dart';
+import '../../../../core/strings/app_strings.dart';
 
 abstract final class StoryModel {
   static Story get mockStory => const Story(
