@@ -30,9 +30,9 @@ class StoryHeaderWidget extends StatelessWidget {
           children: [
             const StoryImage(),
             Positioned(
-              top: 57.h,
-              left: 20.w,
-              right: 20.w,
+              top: 67,
+              left: 24,
+              right: 25,
               child: ImageTopBar(onShare: onShare),
             ),
             Positioned(
