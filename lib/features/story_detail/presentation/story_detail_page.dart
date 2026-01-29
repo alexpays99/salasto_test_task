@@ -56,14 +56,20 @@ class _StoryDetailContent extends StatelessWidget {
         children: [
           const StoryHeaderWidget(),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Column(
               children: [
-                SizedBox(height: 16.h),
-                const StoryActionsWidget(),
-                SizedBox(height: 16.h),
-                const LessonsLearntWidget(),
                 SizedBox(height: 24.h),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: AppColors.textPrimary.withValues(alpha: 0.1),
+                ),
+                SizedBox(height: 24.h),
+                const StoryActionsWidget(),
+                SizedBox(height: 24.h),
+                const LessonsLearntWidget(),
+                SizedBox(height: 60.h),
               ],
             ),
           ),

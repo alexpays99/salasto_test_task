@@ -19,13 +19,15 @@ class LessonsLearntWidget extends StatelessWidget {
       selector: (state) => state.isLessonsUnlocked,
       builder: (context, isUnlocked) => Container(
         width: double.infinity,
-        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.surfaceCard,
           borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(
-            color: AppColors.borderGradientStart,
-            width: 1,
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.borderGradientStart,
+              AppColors.borderGradientEnd,
+            ],
           ),
           boxShadow: const [
             BoxShadow(
@@ -35,9 +37,15 @@ class LessonsLearntWidget extends StatelessWidget {
             ),
           ],
         ),
-        child: isUnlocked
-            ? const _UnlockedContent()
-            : const _LockedContent(),
+        child: Container(
+          margin: const EdgeInsets.all(1),
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceCard,
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: isUnlocked ? const _UnlockedContent() : const _LockedContent(),
+        ),
       ),
     );
   }
@@ -52,10 +60,7 @@ class _LockedContent extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-            AppStrings.lessonsLearnt,
-            style: AppTextStyles.heading2,
-          ),
+          child: Text(AppStrings.lessonsLearnt, style: AppTextStyles.heading2),
         ),
         SizedBox(height: 16.h),
         const _HumanAvatar(),
@@ -80,16 +85,10 @@ class _HumanAvatar extends StatelessWidget {
       height: 60.h,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: AppColors.exodusFruit,
-          width: 1.25,
-        ),
+        border: Border.all(color: AppColors.exodusFruit, width: 1.25),
       ),
       child: ClipOval(
-        child: Image.asset(
-          AppAssets.humanImage,
-          fit: BoxFit.cover,
-        ),
+        child: Image.asset(AppAssets.humanImage, fit: BoxFit.cover),
       ),
     );
   }
@@ -103,10 +102,7 @@ class _UnlockedContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          AppStrings.lessonsLearnt,
-          style: AppTextStyles.heading2,
-        ),
+        Text(AppStrings.lessonsLearnt, style: AppTextStyles.heading2),
         SizedBox(height: 12.h),
         Text(
           AppStrings.lessonsLockedDescription,

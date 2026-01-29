@@ -7,6 +7,7 @@ abstract final class AppColors {
   // Surface
   static const surfaceCard = Color(0xFF120831);
   static const surfaceOverlay = Color(0x66000000);
+  static const surfaceUnderlayer = Color(0xFF24174A);
 
   // Gradients — Listen button
   static const listenGradientStart = Color(0xFF9159DB);
@@ -34,7 +35,7 @@ abstract final class AppColors {
 
   // Text
   static const textPrimary = Color(0xFFFFFFFF);
-  static const textSecondary = Color(0xFFB0B0C3);
+  static const textSecondary = Color(0xFFD0CED6);
   static const textTertiary = Color(0xFF8B859F);
 
   // Tags

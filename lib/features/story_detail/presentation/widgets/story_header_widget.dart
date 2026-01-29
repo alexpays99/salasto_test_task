@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -11,23 +12,58 @@ import '../bloc/story_detail_bloc.dart';
 import '../bloc/story_detail_event.dart';
 import '../bloc/story_detail_state.dart';
 
-/// Full hero section: image + overlapping content card with
-/// star, title, tags, description, and quest row.
 class StoryHeaderWidget extends StatelessWidget {
   const StoryHeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        const _StoryImage(),
-        Positioned(
-          top: 57.h,
-          left: 20.w,
-          right: 20.w,
-          child: const _ImageTopBar(),
+        Stack(
+          children: [
+            const _StoryImage(),
+            Positioned(
+              top: 57.h,
+              left: 20.w,
+              right: 20.w,
+              child: const _ImageTopBar(),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 24.h,
+              child: Column(
+                children: [
+                  const _TitleOverlay(),
+                  SizedBox(height: 10.h),
+                  const _TagsRow(),
+                ],
+              ),
+            ),
+          ],
         ),
-        Positioned(left: 0, right: 0, bottom: 0, child: const _ContentCard()),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Text(
+            AppStrings.storyDescription,
+            style: AppTextStyles.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        SizedBox(height: 24.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Divider(
+            height: 1,
+            thickness: 1,
+            color: AppColors.textPrimary.withValues(alpha: 0.1),
+          ),
+        ),
+        SizedBox(height: 24.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: const _QuestRow(),
+        ),
       ],
     );
   }
@@ -55,20 +91,20 @@ class _ImageTopBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _CircleIconButton(
-          icon: Icons.close,
+          assetPath: AppAssets.iconClose,
           onTap: () => Navigator.of(context).maybePop(),
         ),
-        _CircleIconButton(icon: Icons.ios_share, onTap: () {}),
+        _CircleIconButton(assetPath: AppAssets.iconExport, onTap: () {}),
       ],
     );
   }
 }
 
 class _CircleIconButton extends StatelessWidget {
-  final IconData icon;
+  final String assetPath;
   final VoidCallback onTap;
 
-  const _CircleIconButton({required this.icon, required this.onTap});
+  const _CircleIconButton({required this.assetPath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -81,55 +117,37 @@ class _CircleIconButton extends StatelessWidget {
           color: AppColors.surfaceOverlay,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 24.sp),
+        child: Center(
+          child: SvgPicture.asset(
+            assetPath,
+            width: 24.sp,
+            height: 24.sp,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textPrimary,
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-/// Gradient card overlapping bottom of the image.
-class _ContentCard extends StatelessWidget {
-  const _ContentCard();
+class _TitleOverlay extends StatelessWidget {
+  const _TitleOverlay();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.fromLTRB(8.w, 16.h, 8.w, 16.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-        // gradient: LinearGradient(
-        //   begin: Alignment.topCenter,
-        //   end: Alignment.bottomCenter,
-        //   colors: [
-        //     AppColors.background.withValues(alpha: 0.0),
-        //     AppColors.background.withValues(alpha: 0.75),
-        //     AppColors.background,
-        //   ],
-        //   stops: const [0.0, 0.35, 0.65],
-        // ),
-      ),
-      child: Column(
-        children: [
-          Image.asset(AppAssets.softStar, width: 33.w, height: 44.h),
-          SizedBox(height: 10.h),
-          Text(
-            AppStrings.storyTitle,
-            style: AppTextStyles.heading1,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10.h),
-          const _TagsRow(),
-          SizedBox(height: 10.h),
-          Text(
-            AppStrings.storyDescription,
-            style: AppTextStyles.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10.h),
-          const _QuestRow(),
-        ],
-      ),
+    return Column(
+      children: [
+        Image.asset(AppAssets.softStar, width: 33.w, height: 44.h),
+        SizedBox(height: 10.h),
+        Text(
+          AppStrings.storyTitle,
+          style: AppTextStyles.storyTitle,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
@@ -167,20 +185,35 @@ class _TagsRow extends StatelessWidget {
 }
 
 class _TagChip extends StatelessWidget {
-  final String label;
-
   const _TagChip({required this.label});
+  final String label;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: AppColors.tagBackground,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.tagBorder, width: 1),
+        color: AppColors.textPrimary,
+        borderRadius: BorderRadius.circular(100.r),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.shadowDark,
+            blurRadius: 15,
+            offset: Offset(0, 5),
+          ),
+        ],
       ),
-      child: Text(label, style: AppTextStyles.tag),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 3.h),
+        child: SizedBox(
+          height: 16.h,
+          child: Center(
+            child: Text(
+              label,
+              style: AppTextStyles.tag.copyWith(color: AppColors.surfaceCard),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -192,20 +225,39 @@ class _DurationChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.access_time_filled,
-          size: 15.sp,
-          color: AppColors.exodusFruit,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.textPrimary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(42.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(top: 4.h, right: 6.w, bottom: 4.h, left: 4.w),
+        child: SizedBox(
+          height: 16.h,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                AppAssets.iconTimer,
+                width: 15.sp,
+                height: 15.sp,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.textPrimary,
+                  BlendMode.srcIn,
+                ),
+              ),
+              SizedBox(width: 5.w),
+              Text(
+                duration,
+                style: AppTextStyles.tag.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
         ),
-        SizedBox(width: 5.w),
-        Text(
-          duration,
-          style: AppTextStyles.tag.copyWith(color: AppColors.textSecondary),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -218,36 +270,47 @@ class _QuestRow extends StatelessWidget {
     return BlocBuilder<StoryDetailBloc, StoryDetailState>(
       builder: (context, state) => Row(
         children: [
-          Expanded(
-            child: SizedBox(
-              height: 48.h,
-              child: OutlinedButton.icon(
-                onPressed: () => context.read<StoryDetailBloc>().add(
-                  const StoryDetailQuestToggled(),
-                ),
-                icon: Icon(
-                  state.isInQuest
-                      ? Icons.check_circle
-                      : Icons.add_circle_outline,
-                  size: 20.sp,
-                  color: AppColors.textPrimary,
-                ),
-                label: Text(
-                  AppStrings.addToQuest,
-                  style: AppTextStyles.buttonSecondary,
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppColors.tagBorder, width: 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          Expanded(child: _QuestButton(isInQuest: state.isInQuest)),
           SizedBox(width: 12.w),
           _BookmarkButton(isBookmarked: state.isBookmarked),
         ],
+      ),
+    );
+  }
+}
+
+class _QuestButton extends StatelessWidget {
+  final bool isInQuest;
+
+  const _QuestButton({required this.isInQuest});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () =>
+          context.read<StoryDetailBloc>().add(const StoryDetailQuestToggled()),
+      child: Container(
+        height: 40.h,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceUnderlayer,
+          borderRadius: BorderRadius.circular(100.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              AppAssets.iconAdd,
+              width: 20.sp,
+              height: 20.sp,
+              colorFilter: const ColorFilter.mode(
+                AppColors.textPrimary,
+                BlendMode.srcIn,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Text(AppStrings.addToQuest, style: AppTextStyles.buttonSecondary),
+          ],
+        ),
       ),
     );
   }
@@ -265,16 +328,22 @@ class _BookmarkButton extends StatelessWidget {
         const StoryDetailBookmarkToggled(),
       ),
       child: Container(
-        width: 48.w,
-        height: 48.h,
+        width: 40.w,
+        height: 40.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppColors.tagBorder, width: 1),
+          color: AppColors.surfaceUnderlayer,
+          shape: BoxShape.circle,
         ),
-        child: Icon(
-          isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-          size: 22.sp,
-          color: AppColors.textPrimary,
+        child: Center(
+          child: SvgPicture.asset(
+            AppAssets.iconBookmark,
+            width: 20.sp,
+            height: 20.sp,
+            colorFilter: const ColorFilter.mode(
+              AppColors.textPrimary,
+              BlendMode.srcIn,
+            ),
+          ),
         ),
       ),
     );
