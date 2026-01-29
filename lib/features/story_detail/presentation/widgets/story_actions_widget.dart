@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -8,28 +7,35 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/entities/story.dart';
-import '../bloc/story_detail_bloc.dart';
-import '../bloc/story_detail_event.dart';
 
 /// Listen and Read stacked gradient buttons.
 class StoryActionsWidget extends StatelessWidget {
-  const StoryActionsWidget({super.key});
+  final ValueChanged<ActionType> onActionPressed;
+
+  const StoryActionsWidget({super.key, required this.onActionPressed});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _ActionButton(actionType: ActionType.listen),
+        _ActionButton(
+          actionType: ActionType.listen,
+          onTap: () => onActionPressed(ActionType.listen),
+        ),
         SizedBox(height: 1.h),
-        _ActionButton(actionType: ActionType.read),
+        _ActionButton(
+          actionType: ActionType.read,
+          onTap: () => onActionPressed(ActionType.read),
+        ),
       ],
     );
   }
 }
 
 class _ActionButton extends StatelessWidget {
-  const _ActionButton({required this.actionType});
+  const _ActionButton({required this.actionType, required this.onTap});
   final ActionType actionType;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +61,7 @@ class _ActionButton extends StatelessWidget {
     };
 
     return GestureDetector(
-      onTap: () => context.read<StoryDetailBloc>().add(
-        StoryDetailActionPressed(actionType),
-      ),
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 64.h,

@@ -21,6 +21,10 @@ final class StoryDetailQuestToggled extends StoryDetailEvent {
   const StoryDetailQuestToggled();
 }
 
+final class StoryDetailSharePressed extends StoryDetailEvent {
+  const StoryDetailSharePressed();
+}
+
 final class StoryDetailActionPressed extends StoryDetailEvent {
   final ActionType actionType;
 

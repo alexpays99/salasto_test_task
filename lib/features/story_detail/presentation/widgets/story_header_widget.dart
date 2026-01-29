@@ -9,11 +9,19 @@ import '../../../../core/localization/app_strings.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../domain/entities/story.dart';
 import '../bloc/story_detail_bloc.dart';
-import '../bloc/story_detail_event.dart';
 import '../bloc/story_detail_state.dart';
 
 class StoryHeaderWidget extends StatelessWidget {
-  const StoryHeaderWidget({super.key});
+  final VoidCallback onShare;
+  final VoidCallback onQuestToggle;
+  final VoidCallback onBookmarkToggle;
+
+  const StoryHeaderWidget({
+    super.key,
+    required this.onShare,
+    required this.onQuestToggle,
+    required this.onBookmarkToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,7 @@ class StoryHeaderWidget extends StatelessWidget {
               top: 57.h,
               left: 20.w,
               right: 20.w,
-              child: const _ImageTopBar(),
+              child: _ImageTopBar(onShare: onShare),
             ),
             Positioned(
               left: 0,
@@ -62,7 +70,10 @@ class StoryHeaderWidget extends StatelessWidget {
         SizedBox(height: 24.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: const _QuestRow(),
+          child: _QuestRow(
+            onQuestToggle: onQuestToggle,
+            onBookmarkToggle: onBookmarkToggle,
+          ),
         ),
       ],
     );
@@ -83,7 +94,9 @@ class _StoryImage extends StatelessWidget {
 }
 
 class _ImageTopBar extends StatelessWidget {
-  const _ImageTopBar();
+  final VoidCallback onShare;
+
+  const _ImageTopBar({required this.onShare});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +107,10 @@ class _ImageTopBar extends StatelessWidget {
           assetPath: AppAssets.iconClose,
           onTap: () => Navigator.of(context).maybePop(),
         ),
-        _CircleIconButton(assetPath: AppAssets.iconExport, onTap: () {}),
+        _CircleIconButton(
+          assetPath: AppAssets.iconExport,
+          onTap: onShare,
+        ),
       ],
     );
   }
@@ -203,7 +219,7 @@ class _TagChip extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 3.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         child: SizedBox(
           height: 16.h,
           child: Center(
@@ -219,9 +235,8 @@ class _TagChip extends StatelessWidget {
 }
 
 class _DurationChip extends StatelessWidget {
-  final String duration;
-
   const _DurationChip({required this.duration});
+  final String duration;
 
   @override
   Widget build(BuildContext context) {
@@ -263,16 +278,30 @@ class _DurationChip extends StatelessWidget {
 }
 
 class _QuestRow extends StatelessWidget {
-  const _QuestRow();
+  final VoidCallback onQuestToggle;
+  final VoidCallback onBookmarkToggle;
+
+  const _QuestRow({
+    required this.onQuestToggle,
+    required this.onBookmarkToggle,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StoryDetailBloc, StoryDetailState>(
       builder: (context, state) => Row(
         children: [
-          Expanded(child: _QuestButton(isInQuest: state.isInQuest)),
+          Expanded(
+            child: _QuestButton(
+              isInQuest: state.isInQuest,
+              onTap: onQuestToggle,
+            ),
+          ),
           SizedBox(width: 12.w),
-          _BookmarkButton(isBookmarked: state.isBookmarked),
+          _BookmarkButton(
+            isBookmarked: state.isBookmarked,
+            onTap: onBookmarkToggle,
+          ),
         ],
       ),
     );
@@ -281,14 +310,14 @@ class _QuestRow extends StatelessWidget {
 
 class _QuestButton extends StatelessWidget {
   final bool isInQuest;
+  final VoidCallback onTap;
 
-  const _QuestButton({required this.isInQuest});
+  const _QuestButton({required this.isInQuest, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          context.read<StoryDetailBloc>().add(const StoryDetailQuestToggled()),
+      onTap: onTap,
       child: Container(
         height: 40.h,
         decoration: BoxDecoration(
@@ -298,15 +327,22 @@ class _QuestButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              AppAssets.iconAdd,
-              width: 20.sp,
-              height: 20.sp,
-              colorFilter: const ColorFilter.mode(
-                AppColors.textPrimary,
-                BlendMode.srcIn,
+            if (isInQuest)
+              Icon(
+                Icons.check_circle,
+                size: 20.sp,
+                color: AppColors.textPrimary,
+              )
+            else
+              SvgPicture.asset(
+                AppAssets.iconAdd,
+                width: 20.sp,
+                height: 20.sp,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.textPrimary,
+                  BlendMode.srcIn,
+                ),
               ),
-            ),
             SizedBox(width: 8.w),
             Text(AppStrings.addToQuest, style: AppTextStyles.buttonSecondary),
           ],
@@ -318,15 +354,14 @@ class _QuestButton extends StatelessWidget {
 
 class _BookmarkButton extends StatelessWidget {
   final bool isBookmarked;
+  final VoidCallback onTap;
 
-  const _BookmarkButton({required this.isBookmarked});
+  const _BookmarkButton({required this.isBookmarked, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<StoryDetailBloc>().add(
-        const StoryDetailBookmarkToggled(),
-      ),
+      onTap: onTap,
       child: Container(
         width: 40.w,
         height: 40.h,
@@ -335,15 +370,17 @@ class _BookmarkButton extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         child: Center(
-          child: SvgPicture.asset(
-            AppAssets.iconBookmark,
-            width: 20.sp,
-            height: 20.sp,
-            colorFilter: const ColorFilter.mode(
-              AppColors.textPrimary,
-              BlendMode.srcIn,
-            ),
-          ),
+          child: isBookmarked
+              ? const Icon(Icons.bookmark)
+              : SvgPicture.asset(
+                  AppAssets.iconBookmark,
+                  width: 20.sp,
+                  height: 20.sp,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.textPrimary,
+                    BlendMode.srcIn,
+                  ),
+                ),
         ),
       ),
     );

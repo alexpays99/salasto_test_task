@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../domain/entities/story.dart';
 import 'bloc/story_detail_bloc.dart';
 import 'bloc/story_detail_event.dart';
 import 'bloc/story_detail_state.dart';
@@ -39,7 +40,20 @@ class _StoryDetailView extends StatelessWidget {
           StoryDetailStatus.error => Center(
             child: Text('Something went wrong', style: AppTextStyles.bodyLarge),
           ),
-          StoryDetailStatus.loaded => const _StoryDetailContent(),
+          StoryDetailStatus.loaded => _StoryDetailContent(
+            onShare: () => context.read<StoryDetailBloc>().add(
+              const StoryDetailSharePressed(),
+            ),
+            onQuestToggle: () => context.read<StoryDetailBloc>().add(
+              const StoryDetailQuestToggled(),
+            ),
+            onBookmarkToggle: () => context.read<StoryDetailBloc>().add(
+              const StoryDetailBookmarkToggled(),
+            ),
+            onActionPressed: (type) => context.read<StoryDetailBloc>().add(
+              StoryDetailActionPressed(type),
+            ),
+          ),
         },
       ),
     );
@@ -47,14 +61,28 @@ class _StoryDetailView extends StatelessWidget {
 }
 
 class _StoryDetailContent extends StatelessWidget {
-  const _StoryDetailContent();
+  final VoidCallback onShare;
+  final VoidCallback onQuestToggle;
+  final VoidCallback onBookmarkToggle;
+  final ValueChanged<ActionType> onActionPressed;
+
+  const _StoryDetailContent({
+    required this.onShare,
+    required this.onQuestToggle,
+    required this.onBookmarkToggle,
+    required this.onActionPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const StoryHeaderWidget(),
+          StoryHeaderWidget(
+            onShare: onShare,
+            onQuestToggle: onQuestToggle,
+            onBookmarkToggle: onBookmarkToggle,
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w),
             child: Column(
@@ -66,7 +94,7 @@ class _StoryDetailContent extends StatelessWidget {
                   color: AppColors.textPrimary.withValues(alpha: 0.1),
                 ),
                 SizedBox(height: 24.h),
-                const StoryActionsWidget(),
+                StoryActionsWidget(onActionPressed: onActionPressed),
                 SizedBox(height: 24.h),
                 const LessonsLearntWidget(),
                 SizedBox(height: 60.h),

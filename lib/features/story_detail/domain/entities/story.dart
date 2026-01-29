@@ -13,8 +13,6 @@ final class Story extends Equatable {
   final String duration;
   final bool isBookmarked;
   final bool isInQuest;
-  final bool isLessonsUnlocked;
-
   const Story({
     required this.id,
     required this.title,
@@ -24,36 +22,28 @@ final class Story extends Equatable {
     required this.duration,
     this.isBookmarked = false,
     this.isInQuest = false,
-    this.isLessonsUnlocked = false,
   });
 
-  Story copyWith({
-    bool? isBookmarked,
-    bool? isInQuest,
-    bool? isLessonsUnlocked,
-  }) =>
-      Story(
-        id: id,
-        title: title,
-        description: description,
-        illustrationPath: illustrationPath,
-        tags: tags,
-        duration: duration,
-        isBookmarked: isBookmarked ?? this.isBookmarked,
-        isInQuest: isInQuest ?? this.isInQuest,
-        isLessonsUnlocked: isLessonsUnlocked ?? this.isLessonsUnlocked,
-      );
+  Story copyWith({bool? isBookmarked, bool? isInQuest}) => Story(
+    id: id,
+    title: title,
+    description: description,
+    illustrationPath: illustrationPath,
+    tags: tags,
+    duration: duration,
+    isBookmarked: isBookmarked ?? this.isBookmarked,
+    isInQuest: isInQuest ?? this.isInQuest,
+  );
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        description,
-        illustrationPath,
-        tags,
-        duration,
-        isBookmarked,
-        isInQuest,
-        isLessonsUnlocked,
-      ];
+    id,
+    title,
+    description,
+    illustrationPath,
+    tags,
+    duration,
+    isBookmarked,
+    isInQuest,
+  ];
 }

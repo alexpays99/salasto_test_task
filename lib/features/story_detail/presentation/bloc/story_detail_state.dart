@@ -15,7 +15,6 @@ final class StoryDetailState extends Equatable {
 
   bool get isBookmarked => story?.isBookmarked ?? false;
   bool get isInQuest => story?.isInQuest ?? false;
-  bool get isLessonsUnlocked => story?.isLessonsUnlocked ?? false;
 
   StoryDetailState copyWith({
     StoryDetailStatus? status,
